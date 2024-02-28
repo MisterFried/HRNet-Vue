@@ -4,7 +4,7 @@ import NavigationButton from "./NavigationButton.vue";
 
 <template>
 	<header
-		class="flex items-center justify-between border-b border-b-main-300 bg-main-100 p-4 shadow-md"
+		class="flex items-center justify-between border-b border-b-main-200 bg-main-50 p-4 shadow-md"
 	>
 		<h1 class="text-3xl font-bold">HR Net</h1>
 		<menu class="flex gap-4">

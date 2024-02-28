@@ -17,7 +17,7 @@ const { title, to } = defineProps({
 <template>
 	<RouterLink
 		:to="to"
-		class="rounded-md border border-main-400 bg-main-50 p-2 shadow-md transition-all hover:bg-main-400 hover:text-main-50 focus:bg-main-400 focus:text-main-50"
+		class="rounded-md border border-main-200 bg-white p-2 shadow-md transition-all hover:bg-main-200 focus:bg-main-200"
 	>
 		{{ title }}</RouterLink
 	>
