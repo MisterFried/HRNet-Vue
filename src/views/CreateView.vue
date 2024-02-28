@@ -24,8 +24,8 @@ function setDummyEmployeeList() {
 		<p class="w-full">Create a record for a new employee</p>
 		<CreateEmployeeForm />
 		<button
-			@click="logEmployeeList"
 			class="w-full rounded-md border border-gray-400 bg-white p-2 shadow-sm transition-all hover:bg-gray-200 focus:bg-gray-200"
+			@click="logEmployeeList"
 		>
 			Log employee list
 		</button>
