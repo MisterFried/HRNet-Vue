@@ -2,6 +2,10 @@
 import CreateEmployeeForm from "@/components/CreateEmployeeForm.vue";
 import employees from "@/data/employees";
 
+import { Notifications, useNotification } from "@kyvg/vue3-notification";
+
+const { notify } = useNotification();
+
 function logEmployeeList() {
 	console.log("Employee list :");
 	console.log(JSON.parse(localStorage.getItem("employees") || "[]"));
@@ -10,11 +14,23 @@ function logEmployeeList() {
 function resetEmployeeList() {
 	localStorage.removeItem("employees");
 	console.log("Employee list reset");
+	notify({
+		title: "Employee list reset",
+		text: "Employee list reset successfully",
+		type: "success",
+		duration: 3000,
+	});
 }
 
 function setDummyEmployeeList() {
 	localStorage.setItem("employees", JSON.stringify(employees));
 	console.log("Dummy employee list set");
+	notify({
+		title: "Dummy employee list set",
+		text: "Dummy employee list set successfully",
+		type: "success",
+		duration: 3000,
+	});
 }
 </script>
 
@@ -41,5 +57,6 @@ function setDummyEmployeeList() {
 		>
 			Set dummy employee list
 		</button>
+		<notifications position="bottom center" />
 	</main>
 </template>
