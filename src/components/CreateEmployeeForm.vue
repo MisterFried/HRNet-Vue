@@ -5,6 +5,7 @@ import SelectInput from "@/components/SelectInput.vue";
 
 import states from "@/data/states.ts";
 import departments from "@/data/departments";
+import ComponentTest from "@/components/ComponentTest.vue";
 
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
@@ -42,17 +43,29 @@ const { values, errors, defineField, handleSubmit } = useForm({
 
 const { notify } = useNotification();
 
-const [firstName, firstNameProps] = defineField("firstName");
-const [lastName, lastNameProps] = defineField("lastName");
-const [dateOfBirth, dateOfBirthProps] = defineField("dateOfBirth");
-const [startDate, startDateProps] = defineField("startDate");
-const [street, streetProps] = defineField("street");
-const [city, cityProps] = defineField("city");
-const [state, stateProps] = defineField("state");
-const [zipCode, zipCodeProps] = defineField("zipCode");
-const [department, departmentProps] = defineField("department");
+// const [firstName, firstNameProps] = defineField("firstName");
+// const [lastName, lastNameProps] = defineField("lastName");
+// const [dateOfBirth, dateOfBirthProps] = defineField("dateOfBirth");
+// const [startDate, startDateProps] = defineField("startDate");
+// const [street, streetProps] = defineField("street");
+// const [city, cityProps] = defineField("city");
+// const [state, stateProps] = defineField("state");
+// const [zipCode, zipCodeProps] = defineField("zipCode");
+// const [department, departmentProps] = defineField("department");
 
-const onSubmit = handleSubmit(() => {
+const employee = {
+	firstName: "",
+	lastName: "",
+	dateOfBirth: "",
+	startDate: "",
+	street: "",
+	city: "",
+	state: "",
+	zipCode: "",
+	department: "",
+};
+
+function onSubmitWithoutValidation() {
 	const employee = {
 		firstName: values.firstName,
 		lastName: values.lastName,
@@ -74,29 +87,39 @@ const onSubmit = handleSubmit(() => {
 		type: "success",
 		duration: 3000,
 	});
+}
+
+const onSubmit = handleSubmit(() => {
+	const employeeList = JSON.parse(localStorage.getItem("employees") || "[]");
+	employeeList.push(employee);
+	localStorage.setItem("employees", JSON.stringify(employeeList));
+	notify({
+		title: "Employee created",
+		text: "Employee created successfully",
+		type: "success",
+		duration: 3000,
+	});
 });
 </script>
 
 <template>
+	<ComponentTest />
 	<form
-		@submit.prevent="onSubmit"
+		@submit.prevent="onSubmitWithoutValidation"
 		class="flex flex-col gap-4 rounded-md border border-gray-300 p-4 shadow-md"
 	>
-		<TextInput
+	<InputText />
+		<!-- <TextInput
 			label="First name"
 			name="firstName"
-			v-model="firstName"
-			v-bind="firstNameProps"
-			:errors="errors.firstName"
+			v-model="employee.firstName"
 		/>
 		<TextInput
 			label="Last name"
 			name="lastName"
-			v-model="lastName"
-			v-bind="lastNameProps"
-			:errors="errors.lastName"
-		/>
-		<DateInput
+			v-model="employee.lastName"
+		/> -->
+		<!-- <DateInput
 			label="Date of birth"
 			name="dateOfBirth"
 			v-model="dateOfBirth"
@@ -149,7 +172,7 @@ const onSubmit = handleSubmit(() => {
 			v-bind="departmentProps"
 			:errors="errors.department"
 			:options="departments"
-		/>
+		/> -->
 		<button
 			class="mt-4 rounded-md border border-main-200 bg-white p-2 shadow-sm transition-all hover:bg-main-200 focus:bg-main-200"
 		>
