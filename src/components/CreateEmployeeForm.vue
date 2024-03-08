@@ -1,179 +1,283 @@
-<script setup lang="ts">
-import DateInput from "@/components/DateInput.vue";
-import TextInput from "@/components/TextInput.vue";
-import SelectInput from "@/components/SelectInput.vue";
-
-import states from "@/data/states.ts";
+<script lang="ts">
+import TextInput from "./TextInput.vue";
+import DateInput from "./DateInput.vue";
+import SelectInput from "./SelectInput.vue";
+import states from "@/data/states";
 import departments from "@/data/departments";
-import ComponentTest from "@/components/ComponentTest.vue";
-
-import { useForm } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/yup";
-import * as yup from "yup";
 import { useNotification } from "@kyvg/vue3-notification";
-
-// TODO : Add validation
-const schema = toTypedSchema(
-	yup.object({
-		firstName: yup
-			.string()
-			.min(3, "First name must be at least 3 characters")
-			.required("First name is required"),
-		lastName: yup
-			.string()
-			.min(3, "Last name must be at least 3 characters")
-			.required("Last name is required"),
-		dateOfBirth: yup.string().required("Date of birth is required"),
-		startDate: yup.string().required("Start date is required"),
-		street: yup.string().required("Street is required"),
-		city: yup.string().required("City is required"),
-		state: yup.string().required("State is required"),
-		zipCode: yup
-			.string()
-			.min(5, "Zip code must be 5 characters")
-			.max(5, "Zip code must be 5 characters")
-			.required("Zip code is required"),
-		department: yup.string().required("Department is required"),
-	}),
-);
-
-const { values, errors, defineField, handleSubmit } = useForm({
-	validationSchema: schema,
-});
 
 const { notify } = useNotification();
 
-// const [firstName, firstNameProps] = defineField("firstName");
-// const [lastName, lastNameProps] = defineField("lastName");
-// const [dateOfBirth, dateOfBirthProps] = defineField("dateOfBirth");
-// const [startDate, startDateProps] = defineField("startDate");
-// const [street, streetProps] = defineField("street");
-// const [city, cityProps] = defineField("city");
-// const [state, stateProps] = defineField("state");
-// const [zipCode, zipCodeProps] = defineField("zipCode");
-// const [department, departmentProps] = defineField("department");
+const nameRegex = /^[A-Za-z]+(?:['-][A-Za-z]+)?$/;
+const cityRegex = /^[A-Za-z\s-]+$/;
+const zipCodeRegex = /^[0-9]{5}$/;
 
-const employee = {
-	firstName: "",
-	lastName: "",
-	dateOfBirth: "",
-	startDate: "",
-	street: "",
-	city: "",
-	state: "",
-	zipCode: "",
-	department: "",
+export default {
+	name: "CreateEmployeeForm",
+	components: {
+		TextInput,
+		DateInput,
+		SelectInput,
+	},
+	data() {
+		return {
+			employee: {
+				firstName: "",
+				lastName: "",
+				dateOfBirth: "",
+				startDate: "",
+				street: "",
+				city: "",
+				state: "",
+				zipCode: "",
+				department: "",
+			},
+			errors: {
+				firstName: "",
+				lastName: "",
+				dateOfBirth: "",
+				startDate: "",
+				street: "",
+				city: "",
+				state: "",
+				zipCode: "",
+				department: "",
+			},
+			states: states,
+			departments: departments,
+		};
+	},
+	computed: {
+		isValid() {
+			return (
+				this.errors.firstName === "" &&
+				this.errors.lastName === "" &&
+				this.errors.dateOfBirth === "" &&
+				this.errors.startDate === "" &&
+				this.errors.street === "" &&
+				this.errors.city === "" &&
+				this.errors.state === "" &&
+				this.errors.zipCode === "" &&
+				this.errors.department === ""
+			);
+		},
+	},
+	methods: {
+		onSubmit() {
+			if (this.employee.firstName === "") this.errors.firstName = "First name is required";
+			if (this.employee.lastName === "") this.errors.lastName = "Last name is required";
+			if (this.employee.dateOfBirth === "")
+				this.errors.dateOfBirth = "Date of birth is required";
+			if (this.employee.startDate === "") this.errors.startDate = "Start date is required";
+			if (this.employee.street === "") this.errors.street = "Street is required";
+			if (this.employee.city === "") this.errors.city = "City is required";
+			if (this.employee.state === "") this.errors.state = "State is required";
+			if (this.employee.zipCode === "") this.errors.zipCode = "Zip code is required";
+			if (this.employee.department === "") this.errors.department = "Department is required";
+
+			if (!this.isValid) return;
+
+			const newEmployee = {
+				firstName: this.employee.firstName,
+				lastName: this.employee.lastName,
+				dateOfBirth: this.employee.dateOfBirth,
+				startDate: this.employee.startDate,
+				street: this.employee.street,
+				city: this.employee.city,
+				state: this.employee.state,
+				zipCode: this.employee.zipCode,
+				department: this.employee.department,
+			};
+
+			const employeeList = JSON.parse(localStorage.getItem("employees") || "[]");
+			employeeList.push({ ...newEmployee, id: String(employeeList.length + 1) });
+			localStorage.setItem("employees", JSON.stringify(employeeList));
+
+			notify({
+				title: "Employee created",
+				text: "Employee created successfully",
+				type: "success",
+				duration: 3000,
+			});
+		},
+	},
+	watch: {
+		"employee.firstName": {
+			handler() {
+				if (this.employee.firstName === "") {
+					this.errors.firstName = "First name is required";
+				} else if (this.employee.firstName.length <= 2) {
+					this.errors.firstName = "First name must be at least 3 characters";
+				} else if (!nameRegex.test(this.employee.firstName)) {
+					this.errors.firstName = "First name can only contain letters and hyphens";
+				} else {
+					this.errors.firstName = "";
+				}
+			},
+		},
+		"employee.lastName": {
+			handler() {
+				if (this.employee.lastName === "") {
+					this.errors.lastName = "Last name is required";
+				} else if (this.employee.lastName.length <= 2) {
+					this.errors.lastName = "Last name must be at least 3 characters";
+				} else if (!nameRegex.test(this.employee.lastName)) {
+					this.errors.lastName = "Last name can only contain letters and hyphens";
+				} else {
+					this.errors.lastName = "";
+				}
+			},
+		},
+		"employee.dateOfBirth": {
+			handler() {
+				if (this.employee.dateOfBirth === "") {
+					this.errors.dateOfBirth = "Date of birth is required";
+				} else if (new Date(this.employee.dateOfBirth) > new Date()) {
+					this.errors.dateOfBirth = "Date of birth cannot be in the future";
+				} else {
+					this.errors.dateOfBirth = "";
+				}
+			},
+		},
+		"employee.startDate": {
+			handler() {
+				if (this.employee.startDate === "") {
+					this.errors.startDate = "Start date is required";
+				} else if (new Date(this.employee.startDate) > new Date()) {
+					this.errors.startDate = "Start date cannot be in the future";
+				} else {
+					this.errors.startDate = "";
+				}
+			},
+		},
+		"employee.street": {
+			handler() {
+				if (this.employee.street === "") {
+					this.errors.street = "Street is required";
+				} else {
+					this.errors.street = "";
+				}
+			},
+		},
+		"employee.city": {
+			handler() {
+				if (this.employee.city === "") {
+					this.errors.city = "City is required";
+				} else if (!cityRegex.test(this.employee.city)) {
+					this.errors.city = "City can only contain letters and hyphens";
+				} else {
+					this.errors.city = "";
+				}
+			},
+		},
+		"employee.state": {
+			handler() {
+				if (this.employee.state === "") {
+					this.errors.state = "State is required";
+				} else {
+					this.errors.state = "";
+				}
+			},
+		},
+		"employee.zipCode": {
+			handler() {
+				if (this.employee.zipCode === "") {
+					this.errors.zipCode = "Zip code is required";
+				} else if (!zipCodeRegex.test(this.employee.zipCode)) {
+					this.errors.zipCode = "Zip code must be 5 digits";
+				} else {
+					this.errors.zipCode = "";
+				}
+			},
+		},
+		"employee.department": {
+			handler() {
+				if (this.employee.department === "") {
+					this.errors.department = "Department is required";
+				} else {
+					this.errors.department = "";
+				}
+			},
+		},
+	},
 };
-
-function onSubmitWithoutValidation() {
-	const employee = {
-		firstName: values.firstName,
-		lastName: values.lastName,
-		dateOfBirth: values.dateOfBirth,
-		startDate: values.startDate,
-		street: values.street,
-		city: values.city,
-		state: values.state,
-		zipCode: values.zipCode,
-		department: values.department,
-	};
-
-	const employeeList = JSON.parse(localStorage.getItem("employees") || "[]");
-	employeeList.push(employee);
-	localStorage.setItem("employees", JSON.stringify(employeeList));
-	notify({
-		title: "Employee created",
-		text: "Employee created successfully",
-		type: "success",
-		duration: 3000,
-	});
-}
-
-const onSubmit = handleSubmit(() => {
-	const employeeList = JSON.parse(localStorage.getItem("employees") || "[]");
-	employeeList.push(employee);
-	localStorage.setItem("employees", JSON.stringify(employeeList));
-	notify({
-		title: "Employee created",
-		text: "Employee created successfully",
-		type: "success",
-		duration: 3000,
-	});
-});
 </script>
 
 <template>
-	<ComponentTest />
 	<form
-		@submit.prevent="onSubmitWithoutValidation"
-		class="flex flex-col gap-4 rounded-md border border-gray-300 p-4 shadow-md"
+		@submit.prevent="onSubmit"
+		class="flex w-96 flex-col gap-4 rounded-md border border-gray-300 p-4 shadow-md"
 	>
-	<InputText />
-		<!-- <TextInput
+		<TextInput
+			inputName="firstName"
 			label="First name"
-			name="firstName"
-			v-model="employee.firstName"
+			:value="employee.firstName"
+			:error="errors.firstName"
+			@inputChange="employee.firstName = $event"
 		/>
 		<TextInput
+			inputName="lastName"
 			label="Last name"
-			name="lastName"
-			v-model="employee.lastName"
-		/> -->
-		<!-- <DateInput
-			label="Date of birth"
-			name="dateOfBirth"
-			v-model="dateOfBirth"
-			v-bind="dateOfBirthProps"
-			:errors="errors.dateOfBirth"
+			:value="employee.lastName"
+			:error="errors.lastName"
+			@inputChange="employee.lastName = $event"
 		/>
 		<DateInput
-			label="Start date"
-			name="startDate"
-			v-model="startDate"
-			v-bind="startDateProps"
-			:errors="errors.startDate"
+			inputName="dateOfBirth"
+			label="Date of birth"
+			:value="employee.dateOfBirth"
+			:error="errors.dateOfBirth"
+			@inputChange="employee.dateOfBirth = $event"
 		/>
-		<fieldset className="flex flex-col gap-2 rounded-md border-[1px] border-gray-200 p-4">
-			<legend className="px-2">Address</legend>
+		<DateInput
+			inputName="startDate"
+			label="Start date"
+			:value="employee.startDate"
+			:error="errors.startDate"
+			@inputChange="employee.startDate = $event"
+		/>
+		<fieldset class="flex flex-col gap-2 rounded-md border-[1px] border-gray-200 p-4">
+			<legend class="px-2">Address</legend>
 			<TextInput
+				inputName="street"
 				label="Street"
-				name="street"
-				v-model="street"
-				v-bind="streetProps"
-				:errors="errors.street"
+				:value="employee.street"
+				:error="errors.street"
+				@inputChange="employee.street = $event"
 			/>
 			<TextInput
+				inputName="city"
 				label="City"
-				name="city"
-				v-model="city"
-				v-bind="cityProps"
-				:errors="errors.city"
+				:value="employee.city"
+				:error="errors.city"
+				@inputChange="employee.city = $event"
 			/>
 			<SelectInput
+				inputName="state"
 				label="State"
-				name="state"
-				v-model="state"
-				v-bind="stateProps"
-				:errors="errors.state"
+				:value="employee.state"
+				:error="errors.state"
+				@inputChange="employee.state = $event"
 				:options="states"
 			/>
 			<TextInput
+				inputName="zipCode"
 				label="Zip code"
-				name="zipCode"
-				v-model="zipCode"
-				v-bind="zipCodeProps"
-				:errors="errors.zipCode"
+				:value="employee.zipCode"
+				:error="errors.zipCode"
+				@inputChange="employee.zipCode = $event"
 			/>
 		</fieldset>
 		<SelectInput
+			inputName="department"
 			label="Department"
-			name="department"
-			v-model="department"
-			v-bind="departmentProps"
-			:errors="errors.department"
+			:value="employee.department"
+			:error="errors.department"
+			@inputChange="employee.department = $event"
 			:options="departments"
-		/> -->
+		/>
 		<button
+			type="submit"
 			class="mt-4 rounded-md border border-main-200 bg-white p-2 shadow-sm transition-all hover:bg-main-200 focus:bg-main-200"
 		>
 			Create
