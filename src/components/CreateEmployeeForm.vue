@@ -8,7 +8,7 @@ import { useNotification } from "@kyvg/vue3-notification";
 
 const { notify } = useNotification();
 
-const nameRegex = /^[A-Za-z]+(?:['-][A-Za-z]+)?$/;
+const nameRegex = /^[A-Za-z]+(?:[' -][A-Za-z]+)?$/;
 const cityRegex = /^[A-Za-z\s-]+$/;
 const zipCodeRegex = /^[0-9]{5}$/;
 
