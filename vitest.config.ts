@@ -20,6 +20,7 @@ export default mergeConfig(
 					".eslintrc.cjs",
 					"src/main.ts",
 					"src/router/*",
+					"src/types/*",
 				],
 			},
 		},

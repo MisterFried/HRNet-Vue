@@ -67,10 +67,18 @@ export default {
 		},
 	},
 	emits: ["handleAction"],
+	mounted() {
+		this.initialItems = [...this.items];
+		// Trigger a re-sorting
+		this.sortKey = {
+			key: this.sortKey.key,
+			order: this.sortKey.order,
+		};
+	},
 	watch: {
 		items: {
 			handler() {
-				this.initialItems = this.items;
+				this.initialItems = [...this.items];
 				// Trigger a re-sorting
 				this.sortKey = {
 					key: this.sortKey.key,
@@ -98,8 +106,8 @@ export default {
 		<div>
 			Show
 			<select
-				name="pagination"
-				id="pagination"
+				name="perPage"
+				id="perPageSelect"
 				class="mx-2 rounded-md p-2"
 				:value="perPage"
 				@change="perPage = Number(($event.target as HTMLSelectElement).value)"
@@ -114,6 +122,7 @@ export default {
 			<input
 				type="text"
 				placeholder="Search"
+				id="searchInput"
 				class="rounded-md border border-gray-300 p-2"
 				@input="filterValue = ($event.target as HTMLInputElement).value"
 			/>
@@ -122,12 +131,12 @@ export default {
 	<table>
 		<TableHeader :headers="headers" @handleSort="sortKey = $event" />
 		<tbody>
-			<tr v-if="filteredItems.length === 0">
+			<tr v-if="paginatedItems.length === 0">
 				<td
 					class="border border-gray-300 px-4 py-2 text-center"
 					:colspan="headers.length + 1"
 				>
-					Nothing to display !
+					No items found
 				</td>
 			</tr>
 			<TableRow
@@ -147,6 +156,7 @@ export default {
 		<div class="flex items-center justify-center gap-2">
 			Page {{ page }} of {{ totalPages }}
 			<button
+				id="tablePreviousPage"
 				class="rounded-md border border-gray-400 bg-gray-200 px-2 py-1 transition-all hover:bg-gray-300 focus:bg-gray-300"
 				v-if="page > 1"
 				@click="page--"
@@ -154,6 +164,7 @@ export default {
 				Previous page
 			</button>
 			<button
+				id="tableNextPage"
 				class="rounded-md border border-gray-400 bg-gray-200 px-2 py-1 transition-all hover:bg-gray-300 focus:bg-gray-300"
 				v-if="page < totalPages"
 				@click="page++"

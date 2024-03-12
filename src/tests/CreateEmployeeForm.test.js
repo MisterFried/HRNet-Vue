@@ -101,4 +101,19 @@ describe("Given the Create Employee Form component", () => {
 		const zipErrorMessage = wrapper.find("#zipCodeError");
 		expect(zipErrorMessage.exists()).toBe(true);
 	});
+	test("An error message should be displayed if some fields are empty", () => {
+		const wrapper = mount(CreateEmployeeForm);
+
+		const form = wrapper.find("form");
+		form.trigger("submit");
+
+		expect(wrapper.vm.errors.firstName).toBe("First name is required");
+		expect(wrapper.vm.errors.lastName).toBe("Last name is required");
+		expect(wrapper.vm.errors.dateOfBirth).toBe("Date of birth is required");
+		expect(wrapper.vm.errors.startDate).toBe("Start date is required");
+		expect(wrapper.vm.errors.street).toBe("Street is required");
+		expect(wrapper.vm.errors.city).toBe("City is required");
+		expect(wrapper.vm.errors.zipCode).toBe("Zip code is required");
+	});
+	//TODO Add tests for the other error messages (required after input)
 });

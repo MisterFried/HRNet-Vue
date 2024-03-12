@@ -8,7 +8,7 @@ import { useNotification } from "@kyvg/vue3-notification";
 
 const { notify } = useNotification();
 
-const nameRegex = /^[A-Za-z]+(?:[' -][A-Za-z]+)?$/;
+const nameRegex = /^(?:[A-Za-z]+(?:[' -][A-Za-z]+)?){3,}$/;
 const cityRegex = /^[A-Za-z\s-]+$/;
 const zipCodeRegex = /^[0-9]{5}$/;
 
@@ -106,10 +106,9 @@ export default {
 			handler() {
 				if (this.employee.firstName === "") {
 					this.errors.firstName = "First name is required";
-				} else if (this.employee.firstName.length <= 2) {
-					this.errors.firstName = "First name must be at least 3 characters";
 				} else if (!nameRegex.test(this.employee.firstName)) {
-					this.errors.firstName = "First name can only contain letters and hyphens";
+					this.errors.firstName =
+						"First name can only contain letters and hyphens and must be at least 3 characters long";
 				} else {
 					this.errors.firstName = "";
 				}
@@ -119,10 +118,9 @@ export default {
 			handler() {
 				if (this.employee.lastName === "") {
 					this.errors.lastName = "Last name is required";
-				} else if (this.employee.lastName.length <= 2) {
-					this.errors.lastName = "Last name must be at least 3 characters";
 				} else if (!nameRegex.test(this.employee.lastName)) {
-					this.errors.lastName = "Last name can only contain letters and hyphens";
+					this.errors.lastName =
+						"Last name can only contain letters and hyphens and must be at least 3 characters long";
 				} else {
 					this.errors.lastName = "";
 				}
