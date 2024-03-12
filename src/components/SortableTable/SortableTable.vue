@@ -49,9 +49,12 @@ export default {
 			return this.initialItems.length !== this.filteredItems.length;
 		},
 		totalPages() {
-			return Math.ceil(this.filteredItems.length / this.perPage);
+			const totalPagesValue = Math.ceil(this.filteredItems.length / this.perPage);
+			return totalPagesValue < 1 ? 1 : totalPagesValue;
 		},
 		displayedItemsInterval() {
+			if (this.filteredItems.length === 0) return [0, 0];
+
 			const start = (this.page - 1) * this.perPage + 1;
 			const end = Math.min(this.page * this.perPage, this.filteredItems.length);
 			return [start, end];
