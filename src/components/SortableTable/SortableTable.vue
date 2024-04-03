@@ -65,6 +65,9 @@ export default {
 				this.displayedItemsInterval[1],
 			);
 		},
+		activeSorting() {
+			return `${this.sortKey.key}-${this.sortKey.order}`;
+		},
 	},
 	emits: ["handleAction"],
 	mounted() {
@@ -129,7 +132,11 @@ export default {
 		</div>
 	</div>
 	<table>
-		<TableHeader :headers="headers" @handleSort="sortKey = $event" />
+		<TableHeader
+			:headers="headers"
+			@handleSort="sortKey = $event"
+			:activeSorting="activeSorting"
+		/>
 		<tbody>
 			<tr v-if="paginatedItems.length === 0">
 				<td

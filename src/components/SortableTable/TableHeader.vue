@@ -9,6 +9,10 @@ export default {
 			type: Array<headerInterface>,
 			required: true,
 		},
+		activeSorting: {
+			type: String,
+			required: true,
+		},
 	},
 	components: {
 		ChevronDown,
@@ -28,7 +32,7 @@ export default {
 				{{ header.name }}
 				<button
 					:aria-label="`Sort by ${header.name} in ascending order`"
-					class="absolute right-2 top-1/2 -translate-y-full"
+					:class="`absolute right-2 top-1/2 -translate-y-full ${activeSorting === `${header.key}-asc` ? 'opacity-100' : 'opacity-50'}`"
 					:id="`reorder-${header.key}-asc`"
 					@click="$emit('handleSort', { key: header.key, order: 'asc' })"
 				>
@@ -36,7 +40,7 @@ export default {
 				</button>
 				<button
 					:aria-label="`Sort by ${header.name} in descending order`"
-					class="absolute bottom-1/2 right-2 translate-y-full"
+					:class="`absolute bottom-1/2 right-2 translate-y-full ${activeSorting === `${header.key}-desc` ? 'opacity-100' : 'opacity-50'}`"
 					:id="`reorder-${header.key}-desc`"
 					@click="$emit('handleSort', { key: header.key, order: 'desc' })"
 				>
