@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts">
 // ** Components
 import CreateEmployeeForm from "@/components/CreateEmployeeForm.vue";
 
@@ -10,40 +10,49 @@ import { Notifications, useNotification } from "@kyvg/vue3-notification";
 
 const { notify } = useNotification();
 
-/**
- * Log employee list
- */
-function logEmployeeList() {
-	console.log(JSON.parse(localStorage.getItem("employees") || "[]"));
-}
+export default {
+	name: "CreateView",
+	components: {
+		CreateEmployeeForm,
+		Notifications,
+	},
+	methods: {
+		/**
+		 * Log employee list
+		 */
+		logEmployeeList() {
+			console.log(JSON.parse(localStorage.getItem("employees") || "[]"));
+		},
 
-/**
- * Reset employee list from localStorage and display a confirmation notification
- */
-function resetEmployeeList() {
-	localStorage.removeItem("employees");
-	console.log("Employee list reset");
-	notify({
-		title: "Employee list reset",
-		text: "Employee list reset successfully",
-		type: "success",
-		duration: 3000,
-	});
-}
+		/**
+		 * Reset employee list from localStorage and display a confirmation notification
+		 */
+		resetEmployeeList() {
+			localStorage.removeItem("employees");
+			console.log("Employee list reset");
+			notify({
+				title: "Employee list reset",
+				text: "Employee list reset successfully",
+				type: "success",
+				duration: 3000,
+			});
+		},
 
-/**
- * Set dummy employee list in localStorage and display a confirmation notification
- */
-function setDummyEmployeeList() {
-	localStorage.setItem("employees", JSON.stringify(employees));
-	console.log("Dummy employee list set");
-	notify({
-		title: "Dummy employee list set",
-		text: "Dummy employee list set successfully",
-		type: "success",
-		duration: 3000,
-	});
-}
+		/**
+		 * Set dummy employee list in localStorage and display a confirmation notification
+		 */
+		setDummyEmployeeList() {
+			localStorage.setItem("employees", JSON.stringify(employees));
+			console.log("Dummy employee list set");
+			notify({
+				title: "Dummy employee list set",
+				text: "Dummy employee list set successfully",
+				type: "success",
+				duration: 3000,
+			});
+		},
+	},
+};
 </script>
 
 <template>

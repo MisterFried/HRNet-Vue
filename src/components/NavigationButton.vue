@@ -1,23 +1,24 @@
-<script setup lang="ts">
+<script lang="ts">
 /**
  * Render a navigation button. When clicked, navigate to the provided route.
  *
  * @param {string} title - The displayed text
  * @param {string} to - The route to navigate to
  */
-const { title, to } = defineProps({
-	title: {
-		type: String,
-		required: true,
-		default: "View employees",
-	},
 
-	to: {
-		type: String,
-		required: true,
-		default: "/",
+export default {
+	name: "NavigationButton",
+	props: {
+		title: {
+			type: String,
+			required: true,
+		},
+		to: {
+			type: String,
+			required: true,
+		},
 	},
-});
+};
 </script>
 
 <template>

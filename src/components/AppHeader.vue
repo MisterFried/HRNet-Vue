@@ -1,5 +1,12 @@
-<script setup lang="ts">
+<script lang="ts">
 import NavigationButton from "./NavigationButton.vue";
+
+export default {
+	name: "AppHeader",
+	components: {
+		NavigationButton,
+	},
+};
 </script>
 
 <template>
