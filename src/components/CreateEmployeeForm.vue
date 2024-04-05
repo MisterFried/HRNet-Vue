@@ -1,16 +1,26 @@
 <script lang="ts">
+/**
+ * Render a form for creating a new employee. Whenever the form is valid and submitted,
+ * a new record for the employee will be created in the localStorage.
+ */
+
+// ** Components
 import TextInput from "./TextInput.vue";
 import DateInput from "./DateInput.vue";
 import SelectInput from "./SelectInput.vue";
+
+// ** Data
 import states from "@/data/states";
 import departments from "@/data/departments";
+
+// ** Third party
 import { useNotification } from "@kyvg/vue3-notification";
 
 const { notify } = useNotification();
 
-const nameRegex = /^(?:[A-Za-z]+(?:[' -][A-Za-z]+)?){3,}$/;
-const cityRegex = /^[A-Za-z\s-]+$/;
-const zipCodeRegex = /^[0-9]{5}$/;
+const nameRegex = /^(?:[A-Za-z]+(?:[' -][A-Za-z]+)?){3,}$/; // Only allow letters, apostrophes, hyphens and spaces with a min length of 3
+const cityRegex = /^[A-Za-z\s-]+$/; // Only allow letters, hyphens and spaces
+const zipCodeRegex = /^[0-9]{5}$/; // Only allow numbers with a length of 5
 
 export default {
 	name: "CreateEmployeeForm",
@@ -63,7 +73,14 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * Perform some data validation (in case it was submitted without touching any field), then
+		 * if the form is valid, create a new employee, save it to local storage and display a
+		 * confirmation notification
+		 */
 		onSubmit() {
+			// Prevent submitting without touching any fields, the rest of the validation is handled
+			// by the watchers
 			if (this.employee.firstName === "") this.errors.firstName = "First name is required";
 			if (this.employee.lastName === "") this.errors.lastName = "Last name is required";
 			if (this.employee.dateOfBirth === "")
@@ -101,6 +118,7 @@ export default {
 			});
 		},
 	},
+	// Watch changes in any of the input fields to (in)validate them
 	watch: {
 		"employee.firstName": {
 			handler() {
@@ -203,8 +221,8 @@ export default {
 
 <template>
 	<form
-		@submit.prevent="onSubmit"
-		class="flex w-96 flex-col gap-4 rounded-md border border-gray-300 p-4 shadow-md"
+		@submit.prevent="onSubmit()"
+		class="flex w-full flex-col gap-4 rounded-md border border-gray-300 p-4 shadow-md"
 	>
 		<TextInput
 			inputName="firstName"

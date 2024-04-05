@@ -1,4 +1,14 @@
-<script>
+<script lang="ts">
+/**
+ * Render a select input field with the provided options. Whenever the selected option
+ * changes, emit an event to notify the parent component (inputChange) with the new value.
+ *
+ * @param {string} inputName - The name of the input
+ * @param {string} label - The label displayed above the input
+ * @param {array} options - The array of possible options
+ * @param {string} value - The value of the input
+ * @param {string} error - The error, if any
+ */
 export default {
 	name: "TextInput",
 	props: {
@@ -11,7 +21,7 @@ export default {
 			required: true,
 		},
 		options: {
-			type: Array,
+			type: Array<string>,
 			required: true,
 		},
 		value: {
@@ -33,7 +43,7 @@ export default {
 			:name="inputName"
 			:id="inputName"
 			:value="value"
-			@change="$emit('inputChange', $event.target.value)"
+			@change="$emit('inputChange', ($event.target as HTMLSelectElement).value)"
 			class="rounded-md border-[1px] border-gray-300 bg-white p-2"
 			required
 		>

@@ -1,4 +1,15 @@
 <script lang="ts">
+/**
+ * Return the sortableTable component that displays the provided employee records in a table with
+ * pagination, sorting and filtering capabilities.
+ *
+ * @param items - The list of employee records to display. Each object in the array needs to contain
+ * at least an id.
+ * @param headers - An array of objects defining the displayed column. Each object must contains a name
+ * field for the displayed name and a key field for the associated employee records property (used for
+ * sorting and filtering).
+ * @param perPageInterval - An array containing the options for the number of items to display per page.
+ */
 import TableHeader from "./TableHeader.vue";
 import TableRow from "./TableRow.vue";
 import filterTableItems from "@/utils/filterTableItems";
@@ -72,7 +83,7 @@ export default {
 	emits: ["handleAction"],
 	mounted() {
 		this.initialItems = [...this.items];
-		// Trigger a re-sorting
+		// Update the sortKey to trigger a sorting when the component is mounted
 		this.sortKey = {
 			key: this.sortKey.key,
 			order: this.sortKey.order,
@@ -82,7 +93,7 @@ export default {
 		items: {
 			handler() {
 				this.initialItems = [...this.items];
-				// Trigger a re-sorting
+				// Trigger a sorting on the new items
 				this.sortKey = {
 					key: this.sortKey.key,
 					order: this.sortKey.order,
@@ -91,6 +102,8 @@ export default {
 		},
 		totalPages: {
 			handler() {
+				// Prevent being on a page that doesn't exist when the number of pages changes
+				// (e.g. After deleting le last item on a page)
 				if (this.page > this.totalPages) this.page = this.totalPages;
 			},
 		},

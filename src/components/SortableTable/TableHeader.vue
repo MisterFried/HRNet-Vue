@@ -1,4 +1,13 @@
 <script lang="ts">
+/**
+ * Render all the table headers. Each header can trigger a sorting order change when clicked.
+ * The sorting order change is emitted to the parent component (handleSorting).
+ *
+ * @param headers - An array of objects defining the displayed column. Each object must contains a name
+ * field for the displayed name and a key field for the associated employee records property (used for
+ * sorting and filtering).
+ * @param activeSorting - The currently active sorting order (e.g. "name-asc")
+ */
 import { ChevronDown, ChevronUp } from "lucide-vue-next";
 import type { headerInterface } from "@/types/types";
 

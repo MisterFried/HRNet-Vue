@@ -1,4 +1,15 @@
 <script lang="ts">
+/**
+ * Render all the table rows. Each row contains the data for a single employee. When the delete
+ * button is clicked, an event is emitted to the parent component (handleAction) with the corresponding
+ * employee id as payload.
+ *
+ * @param paginatedItems - The list of employee records to display. Each object in the array needs to
+ * contain at least an id.
+ * @param headers - An array of objects defining the displayed column. Each object must contains a name
+ * field for the displayed name and a key field for the associated employee records property (used for
+ * sorting and filtering).
+ */
 import type { ItemInterface, headerInterface } from "@/types/types";
 
 export default {

@@ -1,4 +1,13 @@
-<script>
+<script lang="ts">
+/**
+ * Render a text input field. Whenever the input value changes, emit an event
+ * to notify the parent component (inputChange) with the new value.
+ * 
+ * @param {string} inputName - The name of the input
+ * @param {string} label - The label displayed above the input
+ * @param {string} value - The value of the input
+ * @param {string} error - The error, if any
+ */
 export default {
 	name: "TextInput",
 	props: {
@@ -31,10 +40,12 @@ export default {
 			:id="inputName"
 			:value="value"
 			:placeholder="label"
-			@input="$emit('inputChange', $event.target.value)"
+			@input="$emit('inputChange', ($event.target as HTMLInputElement).value)"
 			class="rounded-md border-[1px] border-gray-300 px-2 py-1"
 			required
 		/>
-		<p v-if="error" :id="`${inputName}Error`" class="max-w-full text-red-500">{{ error }}</p>
+		<p v-if="error" :id="`${inputName}Error`" class="text-sm leading-4 text-red-500">
+			{{ error }}
+		</p>
 	</div>
 </template>
